@@ -1,8 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"flag"
+	"fmt"
 	"log"
+	"os"
+	"strconv"
+	"strings"
 )
 
 type Config struct {
@@ -41,13 +46,25 @@ func parseFlags() *Config {
 	flag.Parse()
 
 	if tau == 0.0 {
-		log.Fatal("Error: Please provide a valid value for tau, valid range: 0 < tau <= 1")
+		val := floatPrompt("Input the value of Tau: \n")
+		if val <= 0 || val > 1 {
+			log.Fatal("Error: Please provide a valid value for tau, valid range: 0 < tau <= 1")
+		}
+		tau = val
 	}
 	if lambda == 0.0 {
-		log.Fatal("Error: Please provide a valid value for lambda (risk aversion parameter).")
+		val := floatPrompt("Input the value of Lambda (risk aversion parameter): \n")
+		if val <= 1e-8 || val > 0.1 {
+			log.Fatal("Error: Please provide a valid value for lambda, valid range: 1e-8 <= lambda < 0.1")
+		}
+		lambda = val
 	}
 	if sigma == 0.0 {
-		log.Fatal("Error: Please provide a valid value for sigma (annualized volatilty), valid range: 0 < sigma")
+		val := floatPrompt("Input the value of Sigma: \n")
+		if val <= 0 {
+			log.Fatal("Error: Please provide a valid value for sigma (annualized volatilty), valid range: 0 < sigma")
+		}
+		sigma = val
 	}
 
 	return &Config{
@@ -59,4 +76,21 @@ func parseFlags() *Config {
 	}
 }
 
-func getFlag()
+func floatPrompt(label string) float64 {
+
+	var str string
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		fmt.Fprint(os.Stderr, label)
+		str, _ = reader.ReadString('\n')
+		if str != "" {
+			break
+		}
+	}
+	log.Printf("str: %v", str)
+	val, err := strconv.ParseFloat(strings.TrimSpace(str), 64)
+	if err != nil {
+		log.Fatal("Error parsing user input: %v", err)
+	}
+	return val
+}
