@@ -45,6 +45,12 @@ func defineFlags() {
 func parseFlags() *Config {
 	flag.Parse()
 
+	if mu == 0.0 {
+		log.Printf("Using default value for mu: %v", mu)
+	}
+	if r == 0.0 {
+		log.Printf("Using default value for r: %v", r)
+	}
 	if tau == 0.0 {
 		val := floatPrompt("Input the value of Tau: \n")
 		if val <= 0 || val > 1 {

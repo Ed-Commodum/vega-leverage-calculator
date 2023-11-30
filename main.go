@@ -6,7 +6,6 @@ import (
 )
 
 func init() {
-	log.Printf("Initializing...\n")
 	defineFlags()
 }
 
