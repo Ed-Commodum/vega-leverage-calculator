@@ -96,7 +96,7 @@ func floatPrompt(label string) float64 {
 	log.Printf("str: %v", str)
 	val, err := strconv.ParseFloat(strings.TrimSpace(str), 64)
 	if err != nil {
-		log.Fatal("Error parsing user input: %v", err)
+		log.Fatalf("Error parsing user input: %v", err)
 	}
 	return val
 }
